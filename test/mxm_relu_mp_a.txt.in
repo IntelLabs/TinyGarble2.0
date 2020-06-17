@@ -1,0 +1,4 @@
+@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/mac_8_8bit_3cc.emp.bin FFFEFD01020301FEFD 0 3 3 3
+@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/relu_17bit_1cc_syn.emp.bin 0 0 1 3 2
+@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/maxpool_16bit_kdim_kcc_syn.emp.bin 0 0 3 1 1
+terminate

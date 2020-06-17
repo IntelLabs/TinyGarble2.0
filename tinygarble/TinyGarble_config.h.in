@@ -1,0 +1,10 @@
+#ifndef TG_CONFIG_H
+#define TG_CONFIG_H
+
+#define BIN_PATH "@CMAKE_CURRENT_SOURCE_DIR@/bin/"
+#define NETLIST_PATH "@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/"
+#define NETLIST_PATH_PI "@CMAKE_CURRENT_SOURCE_DIR@/tinygarble/netlists_pi/"
+
+double default_array[4] = {0, 0, 0, 0};
+
+#endif //TG_CONFIG_H

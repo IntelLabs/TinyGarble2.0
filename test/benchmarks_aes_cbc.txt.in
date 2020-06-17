@@ -1,0 +1,6 @@
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_cbc_1cc_nblock_2_syn.emp.bin	1	0	AES_CBC_2	128
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_cbc_1cc_nblock_4_syn.emp.bin	1	0	AES_CBC_4	128
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_cbc_1cc_nblock_8_syn.emp.bin	1	0	AES_CBC_8	128
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_cbc_1cc_nblock_16_syn.emp.bin	1	0	AES_CBC_16	128
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_cbc_1cc_nblock_32_syn.emp.bin	1	0	AES_CBC_32	128
+terminate

@@ -1,0 +1,10 @@
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/sum_nbit_ncc_syn.emp.bin		256		0	SUM 	256
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/sum_nbit_ncc_syn.emp.bin		1024	0	SUM 	1024
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/comp_nbit_ncc_syn.emp.bin		16384	1	COMP	16384
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/hamming_32bit_32cc.emp.bin		32		1	HAMM	32
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/hamming_512bit_512cc.emp.bin	512		1	HAMM	512
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/mult_64_64bit_64cc.emp.bin		64		1	MULT	64
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/mult_256_256bit_256cc.emp.bin	256		1	MULT	256
+S	@CMAKE_CURRENT_SOURCE_DIR@/bin/netlists/aes_1cc_syn.emp.bin				1		0	AES		128
+C	@CMAKE_CURRENT_SOURCE_DIR@/bin/aes_ht_a.txt	@CMAKE_CURRENT_SOURCE_DIR@/bin/aes_ht_b.txt	AES_HT	128
+terminate
