@@ -2,15 +2,15 @@ cd ..
 mkdir -p include
 
 echo "---------- installing dependencies ----------"
-sudo ./tinygarble2/install_scripts/install_dependencies.sh
+sudo ./TinyGarble2.0/install_scripts/install_dependencies.sh
 
 echo echo "---------- installing emp-tool ----------"
-./tinygarble2/install_scripts/install_emp-tool.sh
+./TinyGarble2.0/install_scripts/install_emp-tool.sh
 
 echo echo "---------- installing emp-ot ----------"
-./tinygarble2/install_scripts/install_emp-ot.sh
+./TinyGarble2.0/install_scripts/install_emp-ot.sh
 
-echo echo "---------- building tinygarble2 ----------"
-cd tinygarble2
+echo echo "---------- building TinyGarble2.0 ----------"
+cd TinyGarble2.0
 cmake . -DCMAKE_INSTALL_PREFIX=../include
 make -j 
