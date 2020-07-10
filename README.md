@@ -7,8 +7,8 @@
 - For first time set up, run `./setup.sh`. 
 It installs the required packages. 
 It also clones and makes the required libraries -
-[emp-tool](https://github.com/siamumar/emp-tool) and 
-[emp-ot](https://github.com/siamumar/emp-ot),
+[emp-tool](https://github.com/rosariocammarota/emp-tool) and 
+[emp-ot](https://github.com/rosariocammarota/emp-ot),
 which are adapted from the [emp-toolkit](https://github.com/emp-toolkit).
 
 - After the set up, run `./config.sh` followed by `make` if required to build TinyGarble.
