@@ -172,6 +172,6 @@ The total execution runs for `cycles*repeat` times. The DFFs reset to `init` aft
     [LenetSmall_mnist_img_A.inp](test/LenetSmall_mnist_img_A.inp) holds the trained weight parameters of the CNN and [LenetSmall_mnist_img_B.inp](test/LenetSmall_mnist_img_B.inp) holds an example image. This particular image belongs to class 2. 
 
 ## Question
-Please send email to siamumar@ucsd.edu.
+Please send email to rosario.cammarota@intel.com, and siamumar@ucsd.edu.
 
 
