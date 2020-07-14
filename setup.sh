@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd ..
 mkdir -p include
 
