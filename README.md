@@ -174,7 +174,29 @@ The total execution runs for `cycles*repeat` times. The DFFs reset to `init` aft
     [LenetSmall_mnist_img_A.inp](test/LenetSmall_mnist_img_A.inp) holds the trained weight parameters of the CNN and [LenetSmall_mnist_img_B.inp](test/LenetSmall_mnist_img_B.inp) holds an example image. This particular image belongs to class 2. 
 
 ## Manual Installation Procedure
+First install the dependet packages by using the script:
 
+git clone https://github.com/rosariocammarota/TinyGarble2.0.git
+git clone https://github.com/rosariocammarota/emp-tool.git
+git clone https://github.com/rosariocammarota/emp-ot.git
+
+cd TinyGarble2.0
+sudo ./install_scripts/install_dependencies.sh
+
+cd ../emp-tool
+cmake . -DCMAKE_INSTALL_PREFIX=../include
+make -j 
+make install -j 
+
+cd ../emp-ot
+cmake . -DCMAKE_INSTALL_PREFIX=../include
+make -j 
+make install -j 
+
+cd ../TinyGarble2.0
+cmake . -DCMAKE_INSTALL_PREFIX=../include
+make -j 
+make install -j 
 
 
 ## Question
