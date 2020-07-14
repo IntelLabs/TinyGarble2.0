@@ -4,7 +4,7 @@
 
 
 ## Installation Procedure
-The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 progcessor, and a system with 8GB RAM. For manual installation of the framework, refer to [Manual Installation Procedure](#Manual-Installation-Procedure).
+The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 processor, and a system with 8GB RAM. For manual installation of the framework, refer to [Manual Installation Procedure](#Manual-Installation-Procedure).
 
 - For first time set up, run `./setup.sh`. 
 It installs the required packages. 
