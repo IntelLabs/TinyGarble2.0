@@ -1,3 +1,4 @@
+#!/bin/bash
 
 git clone https://github.com/rosariocammarota/emp-ot.git
 cd emp-ot
