@@ -2,7 +2,9 @@
 
 ### Smart, efficient and scalable Yao's Garbled Circuit (GC)
 
-## Installation
+
+## Installation Procedure
+The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 progcessor, and a system with 8GB RAM. For manual installation of the framework, refer to [Manual Installation Procedure](#Manual-Installation-Procedure).
 
 - For first time set up, run `./setup.sh`. 
 It installs the required packages. 
@@ -170,6 +172,10 @@ The total execution runs for `cycles*repeat` times. The DFFs reset to `init` aft
     ./bin/LeNet -k 2 < test/LenetSmall_mnist_img_B.inp
     ```
     [LenetSmall_mnist_img_A.inp](test/LenetSmall_mnist_img_A.inp) holds the trained weight parameters of the CNN and [LenetSmall_mnist_img_B.inp](test/LenetSmall_mnist_img_B.inp) holds an example image. This particular image belongs to class 2. 
+
+## Manual Installation Procedure
+
+
 
 ## Question
 Please send email to rosario.cammarota@intel.com, and siamumar@ucsd.edu.
