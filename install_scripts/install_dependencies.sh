@@ -1,4 +1,7 @@
+#!/bin/bash
+
 if [ "$(uname)" == "Darwin" ]; then
+	echo "--- Intall Dependencies for Mac OS ---"
 	brew update
 	brew list openssl || brew install openssl
 	brew list xctool || brew install xctool
@@ -7,6 +10,7 @@ if [ "$(uname)" == "Darwin" ]; then
 	brew list gmp || brew install gmp
 	brew list boost || brew install boost
 else
+	echo "--- Intall Dependencies for Linux Ubuntu ---"
 	CC=`lsb_release -rs | cut -c 1-2`
 	VER=`expr $CC + 0`
 	if [[ $VER -gt 15 ]]; then
