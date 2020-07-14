@@ -192,7 +192,7 @@ Third, install emp-tool:
 
 ```
 cd emp-tool
-cmake . -DCMAKE_INSTALL_PREFIX=../include
+cmake . -DCMAKE_INSTALL_PREFIX=<install_path>
 make -j 
 make install -j
 cd ..
@@ -202,7 +202,7 @@ Fourth, install emp-ot:
 
 ```
 cd emp-ot
-cmake . -DCMAKE_INSTALL_PREFIX=../include
+cmake . -DCMAKE_INSTALL_PREFIX=<install_path>
 make -j 
 make install -j 
 cd ..
@@ -212,10 +212,12 @@ Finally, install TinyGarble2.0:
 
 ```
 cd TinyGarble2.0
-cmake . -DCMAKE_INSTALL_PREFIX=../include
+cmake . -DCMAKE_INSTALL_PREFIX=<install_path>
 make -j 
 make install -j 
 ```
+
+Note: Specifying `-DCMAKE_INSTALL_PREFIX=<install_path>` in the instructions above is only needed to change the default system installation directory.
 
 ## Question
 Please send email to rosario.cammarota@intel.com, and siamumar@ucsd.edu.
