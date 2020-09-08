@@ -19,7 +19,7 @@ void millionaire(NetIO* io, int party){
 	io->flush();
 
 	uint64_t bit_width = 64;
-    int64_t a, b;
+    int64_t a = 0, b = 0;
 	
 	cout << "Input wealth: ";
     if (TGPI->party == ALICE){
@@ -48,12 +48,16 @@ void millionaire(NetIO* io, int party){
 #endif
         if (res == 1) cout << "BOB is richer" << endl;
         else cout << "ALICE is richer" << endl;
+
+	TGPI->clear_TG_int(a_x);
+	TGPI->clear_TG_int(b_x);
+	TGPI->clear_TG_int(res_x);
 	
 	delete TGPI;
 }
 
 int main(int argc, char** argv) {
-	int party, port;
+	int party = 1, port = 1234;
 	string netlist_address;
 	string server_ip;
 	int program;

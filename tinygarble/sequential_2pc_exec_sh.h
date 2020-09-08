@@ -45,6 +45,11 @@ void sequential_2pc_exec_sh(InputOutput* InOut, SequentialC2PC_SH* twopc, block*
 }
 
 void sequential_2pc_exec_sh(SequentialC2PC_SH* twopc, block* labels_B, block* labels_A, block* labels_S, block*& labels_R, int party, NetIO* io, CircuitFile* cf, int cycles = 1, int repeat = 1, int output_mode = 2) {	
+	if ((output_mode == 0) || (output_mode == 1)){
+		cout << "for output_mode = 0 or 1, an InputOutput object is needed" << endl;
+		exit(-1);
+	}
+	
 	int cyc_rep = cycles*repeat;
 	
 	twopc->init(party, cf, cycles, cyc_rep, output_mode);

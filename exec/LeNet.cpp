@@ -228,6 +228,7 @@ void LeNet(NetIO* io, int party) {
 	cout << "Transferred Data: " << (float)(TGPI_SH->io->num_bytes_sent) / 1024 / 1024 / 1024 << "GB" << endl;
 	
 	delete TGPI_SH;
+	delete TGCNN;
 	
 	return;
 }
@@ -235,7 +236,7 @@ void LeNet(NetIO* io, int party) {
 
 
 int main(int argc, char** argv) {
-	int party, port;
+	int party = 1, port = 1234;
 	string netlist_address;
 	string server_ip;
 	int program;

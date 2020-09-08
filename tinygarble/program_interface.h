@@ -75,19 +75,19 @@ class TinyGarblePI{
 	void sign_extend(lmkvm* y_x, lmkvm* a_x, uint64_t bit_width_target, uint64_t bit_width){
 		y_x->copy(a_x, 0, bit_width);
 		for (uint64_t i = bit_width; i < bit_width_target; i++)
-			y_x->copy(a_x->at(bit_width-1), i, 1);
+			y_x->copy(a_x->att(bit_width-1), i, 1);
 	}
 	void unsign_extend(lmkvm* y_x, lmkvm* a_x, uint64_t bit_width_target, uint64_t bit_width){
 		y_x->copy(a_x, 0, bit_width);
 		for (uint64_t i = bit_width; i < bit_width_target; i++)
-			y_x->copy(twopc->const_lmkvm->at(0), i, 1);
+			y_x->copy(twopc->const_lmkvm->att(0), i, 1);
 	}
 	
 	void assign(lmkvm* y_x, int64_t val, uint64_t bit_width){
 	/*y = val, val is known to both parties, bit_width <= 64*/
 		bitset<64> bin(val);
 		for (uint64_t i = 0; i < bit_width; i++){
-			y_x->copy(twopc->const_lmkvm->at((uint64_t)bin[i]), i, 1);
+			y_x->copy(twopc->const_lmkvm->att((uint64_t)bin[i]), i, 1);
 		}
 	}	
 	void assign(lmkvm* y_x, lmkvm* a_x, uint64_t bit_width){
@@ -281,11 +281,11 @@ class TinyGarblePI{
 	void retrieve_input_labels(lmkvm* retreived_lmkvm, int owner, uint64_t bit_width){
 	/*Labels of input have to be retrieved in the same order they were registered with register_input(), must be called after gen_input_labels()*/
 		if(owner == ALICE){ 
-			retreived_lmkvm->copy(lmkvm_A->at(retreived_index_A), 0, bit_width);
+			retreived_lmkvm->copy(lmkvm_A->att(retreived_index_A), 0, bit_width);
 			retreived_index_A += bit_width;
 		}
 		else {
-			retreived_lmkvm->copy(lmkvm_B->at(retreived_index_B), 0, bit_width);
+			retreived_lmkvm->copy(lmkvm_B->att(retreived_index_B), 0, bit_width);
 			retreived_index_B += bit_width;
 		}
 	}		
@@ -327,6 +327,7 @@ class TinyGarblePI{
 		parseGCOutputString(output, output_hex_str, bit_width, 0, is_signed);
 		
 		delete InOut;
+		delete[] out;
 		return output.back();
 	}
 	int64_t reveal(lmkvm* lmkvm_R){
@@ -455,8 +456,8 @@ class TinyGarblePI{
 	void and_(lmkvm* y_x, lmkvm* a_x, uint64_t b, uint64_t bit_width){
 		bitset<64> bits(b);
 		for (uint64_t i = 0; i < bit_width; i++)
-			if (bits[i]) y_x->copy(a_x->at(i), i, 1);	
-			else y_x->copy(twopc->const_lmkvm->at(0), i, 1);
+			if (bits[i]) y_x->copy(a_x->att(i), i, 1);	
+			else y_x->copy(twopc->const_lmkvm->att(0), i, 1);
 	}
 	
 	/*y = a | b*/
@@ -469,8 +470,8 @@ class TinyGarblePI{
 	void or_(lmkvm* y_x, lmkvm* a_x, uint64_t b, uint64_t bit_width){
 		bitset<64> bits(b);
 		for (uint64_t i = 0; i < bit_width; i++)
-			if (bits[i]) y_x->copy(twopc->const_lmkvm->at(1), i, 1);	
-			else y_x->copy(a_x->at(i), i, 1);
+			if (bits[i]) y_x->copy(twopc->const_lmkvm->att(1), i, 1);	
+			else y_x->copy(a_x->att(i), i, 1);
 	}
 	
 	/*y = a ^ b*/
@@ -497,7 +498,7 @@ class TinyGarblePI{
 	void not_(lmkvm* y_x, lmkvm* a_x, uint64_t bit_width){
 		lmkvm* one = new lmkvm(bit_width);
 		for (uint64_t i = 0; i < bit_width; i++){
-			one->copy(twopc->const_lmkvm->at(1), i, 1);
+			one->copy(twopc->const_lmkvm->att(1), i, 1);
 		}
 		xor_(y_x, one, a_x, bit_width);
 		delete one;
@@ -546,12 +547,12 @@ class TinyGarblePI{
 		for (uint64_t i = 0; i < row_A; i++)
 			for (uint64_t j = 0; j < inner; j++)
 				for (uint64_t k = 0; k < bit_width_A; k++)	
-					lmkvm_A->copy(A[i][j]->at(k), (i*inner + j)*bit_width_A + k, 1);
+					lmkvm_A->copy(A[i][j]->att(k), (i*inner + j)*bit_width_A + k, 1);
 			
 		for (uint64_t i = 0; i < col_B; i++)
 			for (uint64_t j = 0; j < inner; j++)
 				for (uint64_t k = 0; k < bit_width_B; k++)
-					lmkvm_B->copy(B[j][i]->at(k), (i*inner + j)*bit_width_B + k, 1);
+					lmkvm_B->copy(B[j][i]->att(k), (i*inner + j)*bit_width_B + k, 1);
 			
 		for (uint64_t i = 0; i < row_A; i++){
 			for (uint64_t j = 0; j < col_B; j++){
@@ -617,17 +618,17 @@ class TinyGarblePI{
 	/*a << shift*/
 	void left_shift(lmkvm* a_x, uint64_t shift, uint64_t bit_width){
 		for (int64_t i = bit_width - 1; i >= (int64_t)shift; i--){
-			a_x->copy(a_x->at(i - shift), i, 1);
+			a_x->copy(a_x->att(i - shift), i, 1);
 		}
 		for (int64_t i = shift - 1; i >= 0; i--){
-			a_x->copy(twopc->const_lmkvm->at(0), i, 1);
+			a_x->copy(twopc->const_lmkvm->att(0), i, 1);
 		}
 	}		
 	/*a >> shift*/
 	void right_shift(lmkvm* a_x, uint64_t shift, uint64_t bit_width){	
-		a_x->copy(a_x->at(shift), 0, bit_width - shift);
+		a_x->copy(a_x->att(shift), 0, bit_width - shift);
 		for (uint64_t i = bit_width - shift; i < bit_width; i++){
-			a_x->copy(a_x->at(bit_width - 1), i, 1);
+			a_x->copy(a_x->att(bit_width - 1), i, 1);
 		}
 	}
 
@@ -639,7 +640,7 @@ class TinyGarblePI{
 		for (uint64_t i = 0; i < bit_width-1; i++){
 			mask_x->copy(sign_x, i, 1);
 		}
-		mask_x->copy(twopc->const_lmkvm->at(0), bit_width-1, 1);
+		mask_x->copy(twopc->const_lmkvm->att(0), bit_width-1, 1);
 		and_(a_x, a_x, mask_x, bit_width);
 	}
 

@@ -12,6 +12,7 @@
 class lmkvm{
 	public:
 	uint64_t num_bits;
+	bool is_at;
 
 	block* labels;
 	block* mac;
@@ -21,6 +22,7 @@ class lmkvm{
 	
 	lmkvm(uint64_t num_bits){
 		this->num_bits = num_bits;
+		is_at = false;
 		
 		if(num_bits > 0){
 			labels	= new block		[num_bits];
@@ -46,6 +48,19 @@ class lmkvm{
 		R->key		= key + index;
 		R->value	= value + index;
 		R->mask		= mask + index; 
+		R->is_at	= true;
+		return R;
+	}
+
+	lmkvm att (uint64_t index){
+		lmkvm R(0);
+		R.num_bits	= num_bits - index;
+		R.labels	= labels + index;
+		R.mac		= mac + index;
+		R.key		= key + index;
+		R.value		= value + index;
+		R.mask		= mask + index; 
+		R.is_at	= true;
 		return R;
 	}
 
@@ -60,12 +75,25 @@ class lmkvm{
 		copy(R, 0, num_bits);
 	}
 
+	void copy(lmkvm R, uint64_t index, uint64_t num_bits){
+		memcpy(labels + index,	R.labels, num_bits*sizeof(block));
+		memcpy(mac + index,		R.mac, num_bits*sizeof(block));
+		memcpy(key + index,		R.key, num_bits*sizeof(block));
+		memcpy(value + index,	R.value, num_bits*sizeof(bool));
+		memcpy(mask + index,	R.mask, num_bits*sizeof(uint8_t));
+	}
+	void copy(lmkvm R){
+		copy(R, 0, num_bits);
+	}
+
 	~lmkvm(){
-		delete[] labels;
-		delete[] mac;
-		delete[] key;
-		delete[] value;
-		delete[] mask;
+		if (!is_at){
+			delete[] labels;
+			delete[] mac;
+			delete[] key;
+			delete[] value;
+			delete[] mask;
+		}
 	}
 };
 
@@ -153,7 +181,8 @@ class SequentialC2PC { public:
 		memcpy(const_lmkvm->value, preprocess_value, NUM_CONST*sizeof(bool));		
 		pre_ret+= NUM_CONST;
 		
-		bool * mask = new bool[NUM_CONST];		
+		bool * mask = new bool[NUM_CONST];	
+		memset(mask, false, NUM_CONST);
 		block tmp;
 		
 		if(party == ALICE) {
@@ -213,6 +242,8 @@ class SequentialC2PC { public:
 		
 		bool * mask_B = new bool[n1];
 		bool * mask_A = new bool[n2];	
+		memset(mask_B, false, n1);
+		memset(mask_A, false, n2);
 
 		block tmp;
 		
@@ -304,6 +335,7 @@ class SequentialC2PC { public:
 		
 		delete[] in;
 		delete[] IN;
+		delete InOut;
 	}
 	
 	void function_independent() {
@@ -769,6 +801,7 @@ class SequentialC2PC { public:
 		}
 		else {
 			bool * o = new bool[n3];
+			memset(o, false, n3);
 			for(int i = 0; i < n3; ++i) {
 				block tmp;
 				recv_partial_block<SSP>(io, &tmp, 1);

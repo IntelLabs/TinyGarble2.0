@@ -11,7 +11,7 @@ using namespace std;
 namespace po = boost::program_options;
 
 int main(int argc, char** argv) {
-	int party, port;
+	int party = 1, port = 1234;
 	string netlist_address;
 	string server_ip;
 	int program;

@@ -58,9 +58,11 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 	uint64_t tr_index = 0;
 	for(int cid = 0; cid < cyc_rep; ++cid) {
 		if((output_mode == 0) || (((cid+1)%cycles) == 0)){
-			twopc->reveal(output_bit_width, out, lmkvm_R->at(tr_index));
+			lmkvm* lmkvm_R_at_tr = lmkvm_R->at(tr_index);
+			twopc->reveal(output_bit_width, out, lmkvm_R_at_tr);
 			InOut->fill_output(out);
 			tr_index += output_bit_width;
+			delete lmkvm_R_at_tr;
 		}
 	}
 	
@@ -149,6 +151,11 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 		if (report) cout << netlist_address << " -i " << input_hex_str << " -j " << init_hex_str << " -c " << cycles << " -r " << repeat << " -m " << output_mode << endl;
 
 		CircuitFile cf(netlist_address.c_str(), true);
+		if((cf.n0) && (lmkvm_S == nullptr)){
+			cout << netlist_address << " expects a shared input according to the config file " << in_file << endl;
+			cout << " Please make sure the previous netslist execution have the output mode as 2 or 3" << endl;
+			exit(-1);
+		}
 		int cyc_rep = cycles*repeat;
 
 		T.start();
@@ -167,23 +174,25 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 		bool *out = new bool[output_bit_width];
 		memset(out, false, output_bit_width*sizeof(bool));
 
-		if ((old_output_mode == 2) || (old_output_mode == 3)) delete lmkvm_S;
-
 		uint64_t tr_index = 0;
 		for(int cid = 0; cid < cyc_rep; ++cid) {
 			if( (output_mode == 0) || (output_mode == 1) && (((cid+1)%cycles) == 0) ){
-				twopc->reveal(output_bit_width, out, lmkvm_R->at(tr_index));
+				lmkvm* lmkvm_R_at_tr = lmkvm_R->at(tr_index);
+				twopc->reveal(output_bit_width, out, lmkvm_R_at_tr);
 				InOut->fill_output(out);
 				tr_index += output_bit_width;
+				delete lmkvm_R_at_tr;
 			}
 			else if ( (output_mode == 2) || (output_mode == 3) && (((cid+1)%cycles) == 0) ){
+				if (lmkvm_S != nullptr){
+					delete lmkvm_S;
+					lmkvm_S = nullptr;
+				}	
 				if (output_mode == 2) lmkvm_S = new lmkvm(cyc_rep*output_bit_width);
 				else lmkvm_S = new lmkvm((cyc_rep/cycles)*output_bit_width);
 				lmkvm_S->copy(lmkvm_R);
 			}
 		}
-
-		old_output_mode = output_mode;
 
 		delete[] out;		
 		delete lmkvm_B;

@@ -7,12 +7,9 @@
 
 class SequentialC2PC_SH { public:
 	SHOTExtension<NetIO>* ote = nullptr;
-
-	bool** mask;
 	
 	block Delta;
 	block label_const[NUM_CONST];
-	block* labels_b;
 		
 	block **label_init_s;  
 	block **label_input_s;			
@@ -54,6 +51,7 @@ class SequentialC2PC_SH { public:
 			io->send_block(&tmp, 1);
 		}
 		else{
+			memset(&Delta, 0, sizeof(block));
 			io->recv_block(label_const, NUM_CONST);
 		}
 	}
@@ -94,11 +92,7 @@ class SequentialC2PC_SH { public:
 		for(int i = 0; i < cf->num_gate; ++i) {
 			if (cf->gates[4*i+3] == AND_GATE)
 				++num_ands;
-		}
-		
-		mask = new bool*[cyc_rep];		
-
-		labels_b = new block[cyc_rep*cf->n1];	
+		}	
 		
 		label_init_s  = new block*[cyc_rep/cycles];
 		label_input_s = new block*[cyc_rep];
@@ -115,7 +109,6 @@ class SequentialC2PC_SH { public:
 		GT =  new block [num_ands][2];
 
 		for(int i = 0; i < cyc_rep; ++i) {
-			mask[i] = new bool[cf->n1]; 
 			label_input_s[i] = new block[cf->n0 - cf->n0_0];
 			label_input_b[i] = new block[cf->n1 - cf->n1_0];
 			label_input_a[i] = new block[cf->n2 - cf->n2_0];
@@ -132,7 +125,6 @@ class SequentialC2PC_SH { public:
 	
 	void clear() {
 		for(int i = 0; i < cyc_rep; ++i) {
-			delete[] mask[i];
 			delete [] label_input_s[i];
 			delete [] label_input_b[i];
 			delete [] label_input_a[i];
@@ -143,9 +135,6 @@ class SequentialC2PC_SH { public:
 			delete [] label_init_a[i];
 		}
 		delete[] GT;
-		delete[] labels_b;
-		
-		delete [] mask;
 		delete [] label_init_s;
 		delete [] label_input_s;
 		delete [] label_init_b;
@@ -222,9 +211,6 @@ class SequentialC2PC_SH { public:
 			}
 		}
 		
-		delete [] label_init_a_;
-		delete [] label_input_a_;
-		
 		if(party == ALICE){			
 			block tmp;				
 			for(uint64_t i = 0; i < cyc_rep_A*n2; ++i){
@@ -236,6 +222,10 @@ class SequentialC2PC_SH { public:
 		else{			
 			io->recv_block(labels_A, cyc_rep_A*n2);
 		}
+		
+		delete [] label_init_a_;
+		delete [] label_input_a_;
+		delete [] mask_OT;
 	}
 	
 	void gen_input_labels(uint64_t n1, uint64_t n1_0, block* &labels_B, uint64_t cycles_B, uint64_t cyc_rep_B, uint64_t n2, uint64_t n2_0, block* &labels_A, uint64_t cycles_A, uint64_t cyc_rep_A, string input_hex_str, string init_hex_str){
@@ -264,17 +254,23 @@ class SequentialC2PC_SH { public:
 			memcpy(IN + e*input_bit_width, in, input_bit_width*sizeof(bool));
 		}
 		
-		gen_input_labels(n1, n1_0, labels_B, cycles_B, cyc_rep_B, n2, n2_0, labels_A, cycles_A, cyc_rep_A, IN);		
+		gen_input_labels(n1, n1_0, labels_B, cycles_B, cyc_rep_B, n2, n2_0, labels_A, cycles_A, cyc_rep_A, IN);	
+
+		delete InOut;
+		delete [] in;
+		delete [] IN;
 	}
 	
 	void copy_input_labels(block* labels_B, block* labels_A, block* labels_S = nullptr){		
 		for(int e = 0; e < cyc_rep; ++e){
-			memcpy(label_init_s[e/cycles],	labels_S + e*cf->n0,			(cf->n0_0)			*sizeof(block));
-			memcpy(label_input_s[e], 		labels_S + e*cf->n0 + cf->n0_0, (cf->n0 - cf->n0_0)	*sizeof(block));
-			memcpy(label_init_b[e/cycles],	labels_B + e*cf->n1,			(cf->n1_0)			*sizeof(block));
-			memcpy(label_input_b[e],		labels_B + e*cf->n1 + cf->n1_0,	(cf->n1 - cf->n1_0)	*sizeof(block));
-			memcpy(label_init_a[e/cycles],	labels_A + e*cf->n2,			(cf->n2_0)			*sizeof(block));
-			memcpy(label_input_a[e],		labels_A + e*cf->n2 + cf->n2_0,	(cf->n2 - cf->n2_0)	*sizeof(block));
+			if(cf->n0){
+				memcpy(label_init_s[e/cycles],	labels_S + e*cf->n0,			(cf->n0_0)			*sizeof(block));
+				memcpy(label_input_s[e], 		labels_S + e*cf->n0 + cf->n0_0, (cf->n0 - cf->n0_0)	*sizeof(block));
+			}
+			memcpy(label_init_b[e/cycles],		labels_B + e*cf->n1,			(cf->n1_0)			*sizeof(block));
+			memcpy(label_input_b[e],			labels_B + e*cf->n1 + cf->n1_0,	(cf->n1 - cf->n1_0)	*sizeof(block));
+			memcpy(label_init_a[e/cycles],		labels_A + e*cf->n2,			(cf->n2_0)			*sizeof(block));
+			memcpy(label_input_a[e],			labels_A + e*cf->n2 + cf->n2_0,	(cf->n2 - cf->n2_0)	*sizeof(block));
 		}	
 	}
 	
