@@ -12,8 +12,8 @@ The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 pr
 - For first time set up, run `./setup.sh`. 
 It installs the required packages. 
 It also clones and makes the required libraries -
-[emp-tool](https://github.com/rosariocammarota/emp-tool) and 
-[emp-ot](https://github.com/rosariocammarota/emp-ot),
+[emp-tool](https://github.com/IntelLabs/emp-tool) and 
+[emp-ot](https://github.com/IntelLabs/emp-ot),
 which are adapted from the [emp-toolkit](https://github.com/emp-toolkit).
 
 - After the set up, run `./config.sh` followed by `make` if required to build TinyGarble.
