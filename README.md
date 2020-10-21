@@ -180,9 +180,9 @@ The total execution runs for `cycles*repeat` times. The DFFs reset to `init` aft
 First, clone the repositories:
 
 ```
-git clone https://github.com/rosariocammarota/TinyGarble2.0.git
-git clone https://github.com/rosariocammarota/emp-tool.git
-git clone https://github.com/rosariocammarota/emp-ot.git
+git clone https://github.com/IntelLabs/TinyGarble2.0.git
+git clone https://github.com/IntelLabs/emp-tool.git
+git clone https://github.com/IntelLabs/emp-ot.git
 ```
 
 Second, install the dependencies:
