@@ -1,7 +1,10 @@
 # TinyGarble 2.0
 
 ### Smart, efficient and scalable Yao's Garbled Circuit (GC)
+TinyGarble2 is a C++ framework for privacy-preserving computation through the Yao’s Garbled Circuit (GC) protocol in both the honest-but-curious and the malicious security models. 
+The framework provides a rich library with arithmetic and logic building blocks for developing GC-based secure applications. It offers abstractions among three layers: the C++ program, the GC back-end and the Boolean logic representation of the function being computed. TinyGarble2 thus allows the most optimized ver- sions of all pertinent components. These abstractions, coupled with secure share transfer among the functions make TinyGarble2 the fastest and most memory-efficient GC framework. In addition, the framework provides a library for Convolutional Neural Networks (CNN). 
 
+TinyGarble2 was developed at Intel in collaboration with UC San Diego ACES Labs, and is a tool meant to be used only of research purposes. 
 
 ## Installation Procedure
 The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 processor, and a system with 8GB RAM. For manual installation of the framework, refer to [Manual Installation Procedure](#Manual-Installation-Procedure).
