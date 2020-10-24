@@ -11,13 +11,13 @@ if [ "$EUID" -eq 0 ]
     sudo ./TinyGarble2.0/install_scripts/install_dependencies.sh
 fi
 
-echo echo "---------- installing emp-tool ----------"
+echo "---------- installing emp-tool ----------"
 ./TinyGarble2.0/install_scripts/install_emp-tool.sh
 
-echo echo "---------- installing emp-ot ----------"
+echo "---------- installing emp-ot ----------"
 ./TinyGarble2.0/install_scripts/install_emp-ot.sh
 
-echo echo "---------- building TinyGarble2.0 ----------"
+echo "---------- building TinyGarble2.0 ----------"
 cd TinyGarble2.0
 cmake . -DCMAKE_INSTALL_PREFIX=../include
 if [ "$EUID" -eq 0 ]
