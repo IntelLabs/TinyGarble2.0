@@ -29,7 +29,7 @@ It also clones and makes the required libraries -
 [emp-ot](https://github.com/IntelLabs/emp-ot),
 which are adapted from the [emp-toolkit](https://github.com/emp-toolkit).
 
-- After the set up, run `./config.sh` followed by `make` if required to build TinyGarble.
+- After the set up, run `./config.sh` followed by `make` if required to build TinyGarble2.
 
 You can also run TinyGarble2 in a [docker](https://docs.docker.com/get-docker/). 
 
