@@ -25,7 +25,7 @@ else
 		add-apt-repository -y ppa:kojoley/boost
 		apt-get update
 		apt-get install -y cmake git build-essential libssl-dev libgmp-dev python 
-		apt-get install libboost-all-dev
+		apt-get install -y libboost-all-dev
 #		sudo apt-get install -y libboost1.58-dev
 #		sudo apt-get install -y libboost-{chrono,log,program-options,date-time,thread,system,filesystem,regex,test}1.58-dev
 	fi
