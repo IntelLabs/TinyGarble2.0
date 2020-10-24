@@ -4,7 +4,7 @@
 TinyGarble2 is a C++ framework for privacy-preserving computation through the Yao’s Garbled Circuit (GC) protocol in both the honest-but-curious and the malicious security models. 
 The framework provides a rich library with arithmetic and logic building blocks for developing GC-based secure applications. It offers abstractions among three layers: the C++ program, the GC back-end and the Boolean logic representation of the function being computed. TinyGarble2 thus allows the most optimized versions of all pertinent components. These abstractions, coupled with secure share transfer among the functions make TinyGarble2 the fastest and most memory-efficient GC framework. In addition, the framework provides a library for Convolutional Neural Networks (CNN). 
 
-This work was inspired in part by UCSD's TinyGarble. TinyGarble2 is a research tool, not meant to be used for commercial purposes. Please, refer to:
+This work was inspired in part by [TinyGarble](https://github.com/esonghori/TinyGarble) ([S\&P'15](http://aceslab.org/sites/default/files/TinyGarble.pdf)) from the [ACES Lab](http://aceslab.org/) at UCSD. TinyGarble2 is a research tool, not meant to be used for commercial purposes. Please, refer to:
 
 Siam Hussain and Baiyu Li and Farinaz Koushanfar and Rosario Cammarota. [TinyGarble2: Smart, Efficient, and Scalable Yao’s Garble Circuit](https://eprint.iacr.org/2020/1181). 2020 ACM Workshop on Privacy-Preserving Machine Learning in Practice (PPMLP'20) 
 
@@ -19,6 +19,17 @@ It also clones and makes the required libraries -
 which are adapted from the [emp-toolkit](https://github.com/emp-toolkit).
 
 - After the set up, run `./config.sh` followed by `make` if required to build TinyGarble.
+
+You can also run TinyGarble2 in a [docker](https://docs.docker.com/get-docker/). 
+
+- Download the <a id="raw-url-docker" href="https://raw.githubusercontent.com/IntelLabs/TinyGarble2.0/master/Dockerfile" download="Dockerfile">Dockerfile</a>
+and build the image with `docker build -t tinygarble2:latest <download-directory>`. (Note: If the browswer appends a ".txt" extension after "Dockerfile" during dlownload, please remove the extension.)
+
+    Or
+    
+- Pull the image from docker hub with `docker pull siamumar/ubuntu18.04-tinygarble2:latest`. Please remember to run `git pull` and `make` inside the docker container to have the latest version of TinyGarble2. 
+
+To create a container from the image, run `docker run -it <REPOSITORY> /bin/bash`. `<REPOSITORY>` is either `tinygarble2` or `siamumar/ubuntu18.04-tinygarble2` depending on whether it is built locally or pulled from the docker hub. You can list all docker images with `docker images`.
 
 ## Test and Evaluation
 - Run `./bin/test_TinyGarble.sh` to test build for correctness.
