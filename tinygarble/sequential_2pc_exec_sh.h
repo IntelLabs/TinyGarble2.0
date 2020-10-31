@@ -17,8 +17,6 @@ void sequential_2pc_exec_sh(InputOutput* InOut, SequentialC2PC_SH* twopc, block*
 	io->flush();	
 	T.get(dc[1], dt[1]);
 	if (report) cout << "init:\t" << dc[1] << "\tcc\t" << dt[1] << "\tms" << endl;
-	
-	twopc->copy_input_labels(labels_B, labels_A, labels_S);
 
 	int output_bit_width = cf->n3;		
 	InOut->init("", 0, output_bit_width, "", 0, cycles);	
@@ -27,6 +25,7 @@ void sequential_2pc_exec_sh(InputOutput* InOut, SequentialC2PC_SH* twopc, block*
 	
 	T.start();
 	for(int cid = 0; cid < cyc_rep; ++cid) {
+		twopc->copy_input_labels(labels_B, labels_A, labels_S);
 		twopc->garble();
 		io->flush();
 		twopc->evaluate(out);
@@ -55,10 +54,9 @@ void sequential_2pc_exec_sh(SequentialC2PC_SH* twopc, block* labels_B, block* la
 	twopc->init(party, cf, cycles, cyc_rep, output_mode);
 	io->flush();
 	
-	twopc->copy_input_labels(labels_B, labels_A, labels_S);
-	
 	bool *out = nullptr;	
 	for(int cid = 0; cid < cyc_rep; ++cid) {
+		twopc->copy_input_labels(labels_B, labels_A, labels_S);
 		twopc->garble();
 		io->flush();
 		twopc->evaluate(out);

@@ -12,13 +12,14 @@ using namespace std;
 namespace po = boost::program_options;
 
 int main(int argc, char** argv) {
-	int party, port;
-	string netlist_address;
-	string server_ip;
-	string input_hex_str, init_hex_str, output_hex_str;
-	int cycles, repeat, output_mode;	
+	int party = 1, port = 1234;
+	string netlist_address = string(NETLIST_PATH_PI) + "add_8bit.emp.bin";
+	string server_ip = "127.0.0.1";
+	string input_hex_str = "0", init_hex_str = "0", output_hex_str = "0";
+	int cycles = 1, repeat = 1, output_mode = 0;	
 	bool report = true;
 	string in_file;
+	int bs_mal;
 	struct rusage usage;
 	double memory_usage;
 	
@@ -37,6 +38,8 @@ int main(int argc, char** argv) {
 	2: transfer output to next netlist at every cycle\n3: transfer output to next netlist at last cycle") //
 	("file,f", po::value<string>(&in_file),"netlist, input, init, cycles, repeat, output_mode read from this file,\n\
 	ignores command line inputs for these fields \ncurrently supports only semi-honest setting") //
+	("batch_size,b", po::value<int>(&bs_mal)->default_value(INT_MAX),"pre-processing bacth size for malicious setting\n\
+	default:choose adaptively\nused for setting maximum available memory") //
 	("sh", "sequential execution in semi-honest setting") //
 	("oo", "report output only");
 	
@@ -76,11 +79,11 @@ int main(int argc, char** argv) {
 	else{
 		if (vm.count("file")){
 			if (report) cout << "Concateneted netlist execution in malicious settings\n" << endl;
-			output_hex_str = sequential_execution(party, io, in_file, repeat, report, dc, dt);
+			output_hex_str = sequential_execution(party, io, in_file, repeat, bs_mal, report, dc, dt);
 		}
 		else{
 			if (report) cout << "Single netlist execution in malicious setting\n" << endl;
-			output_hex_str = sequential_execution(party, io, netlist_address, input_hex_str, init_hex_str, cycles, repeat, output_mode, report, dc, dt);
+			output_hex_str = sequential_execution(party, io, netlist_address, input_hex_str, init_hex_str, cycles, repeat, output_mode, bs_mal, report, dc, dt);
 		}
 	}	
 	

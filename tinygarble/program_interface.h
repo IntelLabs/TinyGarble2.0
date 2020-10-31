@@ -35,6 +35,8 @@ class TinyGarblePI{
 		io->flush();
 		twopc->function_independent();
 		io->flush();
+		twopc->new_const_labels();
+		io->flush();
 	}	
 
 	/***register inputs from Alice or Bob, must be followed by gen_input_labels and retrieve_input_labels***/

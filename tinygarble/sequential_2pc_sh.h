@@ -10,13 +10,7 @@ class SequentialC2PC_SH { public:
 	
 	block Delta;
 	block label_const[NUM_CONST];
-		
-	block **label_init_s;  
-	block **label_input_s;			
-	block **label_init_b;  
-	block **label_input_b; 
-	block **label_init_a;  
-	block **label_input_a; 
+	block* labels_b;
 	
 	block* labels;
 	block* labels_1; //labels of the previous cycle
@@ -92,14 +86,9 @@ class SequentialC2PC_SH { public:
 		for(int i = 0; i < cf->num_gate; ++i) {
 			if (cf->gates[4*i+3] == AND_GATE)
 				++num_ands;
-		}	
-		
-		label_init_s  = new block*[cyc_rep/cycles];
-		label_input_s = new block*[cyc_rep];
-		label_init_b  = new block*[cyc_rep/cycles];
-		label_input_b = new block*[cyc_rep];
-		label_init_a  = new block*[cyc_rep/cycles];
-		label_input_a = new block*[cyc_rep];
+		}		
+
+		labels_b = new block[cyc_rep*cf->n1];
 		labels = new block[cf->num_wire];
 		labels_1 = new block[cf->num_wire];
 		
@@ -107,40 +96,14 @@ class SequentialC2PC_SH { public:
 		else if (output_mode == 3) labels_tr = new block[(cyc_rep/cycles)*(cf->n3)];
 		
 		GT =  new block [num_ands][2];
-
-		for(int i = 0; i < cyc_rep; ++i) {
-			label_input_s[i] = new block[cf->n0 - cf->n0_0];
-			label_input_b[i] = new block[cf->n1 - cf->n1_0];
-			label_input_a[i] = new block[cf->n2 - cf->n2_0];
-		}
-
-		for(int i = 0; i < cyc_rep/cycles; ++i) {		
-			label_init_s[i]  = new block[cf->n0_0];		
-			label_init_b[i]  = new block[cf->n1_0];
-			label_init_a[i]  = new block[cf->n2_0];
-		}
 		
 		cid = 0;	
 	}
 	
 	void clear() {
-		for(int i = 0; i < cyc_rep; ++i) {
-			delete [] label_input_s[i];
-			delete [] label_input_b[i];
-			delete [] label_input_a[i];
-		}
-		for(int i = 0; i < cyc_rep/cycles; ++i) {	
-			delete [] label_init_s[i];
-			delete [] label_init_b[i];
-			delete [] label_init_a[i];
-		}
+
 		delete[] GT;
-		delete [] label_init_s;
-		delete [] label_input_s;
-		delete [] label_init_b;
-		delete [] label_input_b;
-		delete [] label_init_a;
-		delete [] label_input_a;
+		delete[] labels_b;
 		
 		delete [] labels;
 		delete [] labels_1;
@@ -261,31 +224,19 @@ class SequentialC2PC_SH { public:
 		delete [] IN;
 	}
 	
-	void copy_input_labels(block* labels_B, block* labels_A, block* labels_S = nullptr){		
-		for(int e = 0; e < cyc_rep; ++e){
-			if(cf->n0){
-				memcpy(label_init_s[e/cycles],	labels_S + e*cf->n0,			(cf->n0_0)			*sizeof(block));
-				memcpy(label_input_s[e], 		labels_S + e*cf->n0 + cf->n0_0, (cf->n0 - cf->n0_0)	*sizeof(block));
-			}
-			memcpy(label_init_b[e/cycles],		labels_B + e*cf->n1,			(cf->n1_0)			*sizeof(block));
-			memcpy(label_input_b[e],			labels_B + e*cf->n1 + cf->n1_0,	(cf->n1 - cf->n1_0)	*sizeof(block));
-			memcpy(label_init_a[e/cycles],		labels_A + e*cf->n2,			(cf->n2_0)			*sizeof(block));
-			memcpy(label_input_a[e],			labels_A + e*cf->n2 + cf->n2_0,	(cf->n2 - cf->n2_0)	*sizeof(block));
-		}	
+	void copy_input_labels(block* labels_B, block* labels_A, block* labels_S = nullptr){	
+			memcpy(labels,			 							label_const							, NUM_CONST				*sizeof(block));	
+		if(cf->n0){
+			memcpy(labels + NUM_CONST, 		 					labels_S + cid*cf->n0				, cf->n0_0				*sizeof(block));
+			memcpy(labels + NUM_CONST + cf->n0_0,				labels_S + cid*cf->n0 + cf->n0_0	, (cf->n0 - cf->n0_0)	*sizeof(block));
+		}
+			memcpy(labels + NUM_CONST + cf->n0, 				labels_B + cid*cf->n1				, cf->n1_0				*sizeof(block));
+			memcpy(labels + NUM_CONST + cf->n0+cf->n1_0,		labels_B + cid*cf->n1 + cf->n1_0	, (cf->n1 - cf->n1_0)	*sizeof(block));
+			memcpy(labels + NUM_CONST + cf->n0+cf->n1,			labels_A + cid*cf->n2				, cf->n2_0				*sizeof(block));
+			memcpy(labels + NUM_CONST + cf->n0+cf->n1+cf->n2_0, labels_A + cid*cf->n2 + cf->n2_0	, (cf->n2 - cf->n2_0)	*sizeof(block));
 	}
 	
 	void garble() {			
-			memcpy(labels,			 							 	label_const					, NUM_CONST				*sizeof(block));
-			
-		if(cf->n0){
-			memcpy(labels + NUM_CONST, 		 						label_init_s[cid/cycles]	, cf->n0_0				*sizeof(block));
-			memcpy(labels + NUM_CONST + cf->n0_0,					label_input_s[cid]			, (cf->n0 - cf->n0_0)	*sizeof(block));
-		}
-			memcpy(labels + NUM_CONST + cf->n0, 					label_init_b[cid/cycles]	, cf->n1_0				*sizeof(block));
-			memcpy(labels + NUM_CONST + cf->n0+cf->n1_0,			label_input_b[cid]			, (cf->n1 - cf->n1_0)	*sizeof(block));
-			memcpy(labels + NUM_CONST + cf->n0+cf->n1,			 	label_init_a[cid/cycles]	, cf->n2_0				*sizeof(block));
-			memcpy(labels + NUM_CONST + cf->n0+cf->n1+cf->n2_0, 	label_input_a[cid]			, (cf->n2 - cf->n2_0)	*sizeof(block));
-
 		if(party == ALICE) {
 			int ands = 0;
 			for(int i = 0; i < cf->num_gate; ++i) {

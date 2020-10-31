@@ -9,7 +9,14 @@
 
 using namespace std;
 
-string sequential_execution(int party, NetIO* io, string netlist_address, string input_hex_str = "", string init_hex_str = "", int cycles = 1, int repeat = 1, int output_mode = 0, bool report = true, uint64_t dc[4] = (uint64_t*)default_array, double dt[4] = default_array) {
+#define BS_MAL_MIN 320
+
+bool comp(int a, int b) 
+{ 
+    return (a < b); 
+} 
+
+string sequential_execution(int party, NetIO* io, string netlist_address, string input_hex_str = "", string init_hex_str = "", int cycles = 1, int repeat = 1, int output_mode = 0, int bs_mal = 0, bool report = true, uint64_t dc[4] = (uint64_t*)default_array, double dt[4] = default_array) {
 	Timer T;
 	
 	T.start();	
@@ -21,10 +28,14 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 			++num_ands;
 	}
 	int num_inputs = cf.n1 + cf.n2;	
-	int total_pre = num_inputs + num_ands;
 	int cyc_rep = cycles*repeat;
-	int total_PRE = NUM_CONST + total_pre*cyc_rep;
-	int total_ANDS = num_ands*cyc_rep;
+	int NUM_INPUTS = NUM_CONST + num_inputs*cyc_rep;
+	int NUM_ANDS = num_ands*cyc_rep;
+	
+	int total_ANDS = min(NUM_ANDS, max({BS_MAL_MIN, bs_mal, num_ands}, comp));
+	int total_PRE = min(NUM_INPUTS + NUM_ANDS, max({bs_mal, cf.n1*cyc_rep, cf.n2*cyc_rep, num_ands}, comp));
+	
+	if (report) cout << total_ANDS << " " << total_PRE << endl;	
 	
 	SequentialC2PC* twopc = new SequentialC2PC(io, party, total_PRE, total_ANDS);
 	io->flush();
@@ -34,6 +45,8 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 
 	T.start();
 	twopc->function_independent();
+	io->flush();
+	twopc->new_const_labels();
 	io->flush();
 	
 	lmkvm* lmkvm_B = new lmkvm(cyc_rep*cf.n1);	
@@ -79,7 +92,7 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 	return output_hex_str;
 }
 
-string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 = 1, bool report = true, uint64_t dc[4] = (uint64_t*)default_array, double dt[4] = default_array) {
+string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 = 1, int bs_mal = 0, bool report = true, uint64_t dc[4] = (uint64_t*)default_array, double dt[4] = default_array) {
 	Timer T;	
 	memset(dc, 0, 4*sizeof(uint64_t));
 	memset(dt, 0, 4*sizeof(double));
@@ -93,8 +106,8 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 		perror(in_file.c_str());
 		exit(-1);
 	}
-
-	int total_PRE = NUM_CONST, total_ANDS = 0;
+	
+	int NUM_INPUTS = NUM_CONST, max_num_inputs = 0, NUM_ANDS = 0, max_num_ands = 0;
 	
 	while(true) {
 		fin >> netlist_address;
@@ -109,11 +122,15 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 				++num_ands;
 		}
 		int num_inputs = cf.n1 + cf.n2;	
-		int total_pre = num_inputs + num_ands;
 		int cyc_rep = cycles*repeat;
-		total_PRE += total_pre*cyc_rep;
-		total_ANDS += num_ands*cyc_rep;
+		NUM_INPUTS += num_inputs*cyc_rep;
+		max_num_inputs = max({max_num_inputs, cf.n1*cyc_rep, cf.n2*cyc_rep}, comp);
+		NUM_ANDS += num_ands*cyc_rep;
+		max_num_ands = max(max_num_ands, num_ands);
 	}	
+	
+	int total_ANDS = min(NUM_ANDS, max({BS_MAL_MIN, bs_mal, max_num_ands}, comp));
+	int total_PRE = min(NUM_INPUTS + NUM_ANDS, max({bs_mal, max_num_inputs, max_num_ands}, comp));
 
 	if (report) cout << "total_PRE = " << total_PRE << " total_ANDS= " << total_ANDS << endl;
 	
@@ -125,6 +142,8 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 
 	T.start();
 	twopc->function_independent();
+	io->flush();
+	twopc->new_const_labels();
 	io->flush();
 	T.get(dc[1], dt[1]);
 	if (report) cout << "inde:\t" << dc[1] << "\tcc\t" << dt[1] << "\tms" << endl;

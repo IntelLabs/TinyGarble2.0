@@ -101,7 +101,7 @@ class TinyGarblePI_SH{
 			block* a1_x = new block[bit_width_y];
 			sign_extend(a1_x, a_x, bit_width_y, bit_width_a);
 			assign(y_x, a1_x, bit_width_y);
-			delete a1_x;
+			delete[] a1_x;
 		}
 		else assign(y_x, a_x, bit_width_y);
 	}
@@ -342,6 +342,9 @@ class TinyGarblePI_SH{
 		parseGCOutputString(output, output_hex_str, bit_width, 0, is_signed);
 		
 		delete InOut;
+		delete[] o;
+		delete[] o_hat;
+		delete[] mask;
 		return output.back();
 	}
 	
@@ -391,13 +394,13 @@ class TinyGarblePI_SH{
 		sign_extend(a1_x, a_x, bit_width, bit_width_a);
 		sign_extend(b1_x, b_x, bit_width, bit_width_b);
 		fun(y_x, a1_x, b1_x, bit_width, op);
-		delete a1_x;
-		delete b1_x;
+		delete[] a1_x;
+		delete[] b1_x;
 	}
 	void fun(block*& y_x, block* a_x, int64_t b, uint64_t bit_width, string op){
 		auto b_x = TG_int_init(PUBLIC, bit_width, b);
 		fun(y_x, a_x, b_x, bit_width, op);
-		delete b_x;
+		delete[] b_x;
 	}
 	
 	/*y = a + b*/
@@ -453,8 +456,8 @@ class TinyGarblePI_SH{
 		unsign_extend(a1_x, a_x, bit_width, bit_width_a);
 		unsign_extend(b1_x, b_x, bit_width, bit_width_b);
 		logic(y_x, a1_x, b1_x, bit_width, op);
-		delete a1_x;
-		delete b1_x;
+		delete[] a1_x;
+		delete[] b1_x;
 	}
 	
 	/*y = a & b*/
@@ -495,14 +498,14 @@ class TinyGarblePI_SH{
 	void xor_(block*& y_x, block* a_x, uint64_t b, uint64_t bit_width){
 		auto b_x = TG_int_init(PUBLIC, bit_width, b);
 		xor_(y_x, a_x, b_x, bit_width);
-		delete b_x;
+		clear_TG_int(b_x);
 	}
 	
 	/*y = -a*/
 	void neg(block*& y_x, block* a_x, uint64_t bit_width){
 		block* zero = TG_int_init(PUBLIC, bit_width, (int64_t)0);
 		sub(y_x, zero, a_x, bit_width);
-		delete zero;
+		clear_TG_int(zero);
 	}
 
 	/*y = ~a*/
@@ -512,7 +515,7 @@ class TinyGarblePI_SH{
 			one[i] = twopc->label_const[1];
 		}
 		xor_(y_x, one, a_x, bit_width);
-		delete one;
+		delete[] one;
 	}
 	
 	/*a << shift*/
@@ -560,8 +563,8 @@ class TinyGarblePI_SH{
 			if (bits[i]) add(y_x, y_x, a2_x, bit_width_y);
 			left_shift(a2_x, 1, bit_width_y);
 		}
-		delete a1_x;
-		delete a2_x;
+		clear_TG_int(a1_x);
+		clear_TG_int(a2_x);
 	}
 	
 	void mat_mult(uint64_t row_A, uint64_t inner, uint64_t col_B, auto &A, auto &B, auto &C, int64_t rs_bits, uint64_t bit_width_A, uint64_t bit_width_B, uint64_t bit_width_C, uint64_t bit_width_G){
@@ -620,7 +623,7 @@ class TinyGarblePI_SH{
 		CircuitFile cf(netlist_address.c_str(), true);
 		uint64_t cycles = 1, repeat = 1, output_mode = 2;	
 		sequential_2pc_exec_sh(twopc, c_x, ab_x, nullptr, y_x, party, io, &cf, cycles, repeat, output_mode);		
-		delete ab_x;
+		delete[] ab_x;
 	}
 	void ifelse(block*& y_x, block* c_x, block* a_x, block* b_x, uint64_t bit_width_a, uint64_t bit_width_b){
 		uint64_t bit_width = MAX(bit_width_a, bit_width_b);
@@ -629,8 +632,8 @@ class TinyGarblePI_SH{
 		sign_extend(a1_x, a_x, bit_width, bit_width_a);
 		sign_extend(b1_x, b_x, bit_width, bit_width_b);
 		ifelse(y_x, c_x, a1_x, b1_x, bit_width);
-		delete a1_x;
-		delete b1_x;
+		delete[] a1_x;
+		delete[] b1_x;
 	}
 	void ifelse(block*& y_x, block* c_x, block* a_x, int64_t b, uint64_t bit_width){	
 		auto b_x = TG_int_init(PUBLIC, bit_width, b);
@@ -641,8 +644,8 @@ class TinyGarblePI_SH{
 		CircuitFile cf(netlist_address.c_str(), true);
 		uint64_t cycles = 1, repeat = 1, output_mode = 2;	
 		sequential_2pc_exec_sh(twopc, c_x, ab_x, nullptr, y_x, party, io, &cf, cycles, repeat, output_mode);		
-		delete ab_x;
-		delete b_x;
+		delete[] ab_x;
+		clear_TG_int(b_x);
 	}
 	
 	/*relu(a)*/		
@@ -655,6 +658,8 @@ class TinyGarblePI_SH{
 		}
 		mask_x[bit_width-1] = twopc->label_const[0];
 		and_(a_x, a_x, mask_x, bit_width);
+		delete[] sign_x;
+		delete[] mask_x;
 	}
 	
 };	

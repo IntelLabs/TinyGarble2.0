@@ -12,9 +12,6 @@ void sequential_2pc_exec(SequentialC2PC* twopc, lmkvm* lmkvm_B, lmkvm* lmkvm_A, 
 	T.start();
 	
 	twopc->init(cf, cycles, cyc_rep, output_mode);	
-	twopc->copy_input_labels(lmkvm_B, lmkvm_A, lmkvm_S);
-	twopc->function_dependent_st();
-	io->flush();
 	T.get(dc[2], dt[2]);
 	if (report) cout << "dep:\t" << dc[2] << "\tcc\t" << dt[2] << "\tms" << endl;
 	
@@ -22,10 +19,15 @@ void sequential_2pc_exec(SequentialC2PC* twopc, lmkvm* lmkvm_B, lmkvm* lmkvm_A, 
 
 	uint64_t tr_index = 0;
 	for(int cid = 0; cid < cyc_rep; ++cid) {
-		twopc->evaluate(cid);
+		twopc->copy_input_labels(lmkvm_B, lmkvm_A, lmkvm_S);
+		twopc->function_dependent_st();
+		io->flush();
+		twopc->evaluate();
 		if((output_mode == 0) || (((cid+1)%cycles) == 0)){
-			twopc->retrieve_shares(cid, lmkvm_R->at(tr_index));
+			lmkvm* lmkvm_R_at_tr = lmkvm_R->at(tr_index);
+			twopc->retrieve_shares(lmkvm_R_at_tr);
 			tr_index += cf->n3;
+			delete lmkvm_R_at_tr;
 		}
 	}
 

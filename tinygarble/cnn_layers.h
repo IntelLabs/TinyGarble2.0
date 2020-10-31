@@ -107,6 +107,11 @@ class TinyGarbleCNN{
 			}
 			TGPI_SH->assign(outArr, maxiIdx_x, bit_width_out);
 		}
+
+		TGPI_SH->clear_TG_int(maxi_x);
+		TGPI_SH->clear_TG_int(maxiIdx_x);
+		TGPI_SH->clear_TG_int(i_x);
+		TGPI_SH->clear_TG_int(b_x);
 	}
 
 	void Relu2_TG(int32_t s1, int32_t s2, auto &inArr, uint64_t bit_width){
@@ -173,6 +178,9 @@ class TinyGarbleCNN{
 				}
 			}
 		}
+
+		TGPI_SH->clear_TG_int(maxi_x);
+		TGPI_SH->clear_TG_int(temp_x);
 	}
 
 	void MatAddBroadCast2_TG(int32_t s1, int32_t s2, auto &A, auto &B, auto &outArr, uint64_t bit_width_A, uint64_t bit_width_B, uint64_t bit_width_out){

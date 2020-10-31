@@ -76,6 +76,11 @@ string sequential_execution_sh(int party, NetIO* io, string in_file, int repeat_
 		if (report) cout << netlist_address << " -i " << input_hex_str << " -j " << init_hex_str << " -c " << cycles << " -r " << repeat << " -m " << output_mode << endl;
 		
 		CircuitFile cf(netlist_address.c_str(), true);
+		if((cf.n0) && (labels_S == nullptr)){
+			cout << netlist_address << " expects a shared input according to the config file " << in_file << endl;
+			cout << " Please make sure the previous netslist execution have the output mode as 2 or 3" << endl;
+			exit(-1);
+		}
 
 		T.start();
 		int cyc_rep = cycles*repeat;
@@ -90,7 +95,10 @@ string sequential_execution_sh(int party, NetIO* io, string in_file, int repeat_
 		
 		sequential_2pc_exec_sh(InOut, twopc, labels_B, labels_A, labels_S, labels_R, party, io, &cf, cycles, repeat, output_mode, report, dc_, dt_);
 
-		if ((old_output_mode == 2) || (old_output_mode == 3)) delete [] labels_S;		
+		if ((old_output_mode == 2) || (old_output_mode == 3)){
+			delete [] labels_S;	
+			labels_S = nullptr;	
+		}
 		if (output_mode == 2) {
 			labels_S = new block[cyc_rep*cf.n3];
 			memcpy(labels_S, labels_R, cyc_rep*cf.n3*sizeof(block));
@@ -116,6 +124,7 @@ string sequential_execution_sh(int party, NetIO* io, string in_file, int repeat_
 	
 	output_hex_str = InOut->read_output();
 	
+	if (labels_S != nullptr) delete [] labels_S;	
 	delete InOut;
 	delete twopc;
 	
