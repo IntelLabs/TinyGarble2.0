@@ -8,6 +8,17 @@ This work was inspired in part by [TinyGarble](https://github.com/esonghori/Tiny
 
 Siam Hussain and Baiyu Li and Farinaz Koushanfar and Rosario Cammarota. [TinyGarble2: Smart, Efficient, and Scalable Yao’s Garble Circuit](https://eprint.iacr.org/2020/1181). 2020 ACM Workshop on Privacy-Preserving Machine Learning in Practice (PPMLP'20) 
 
+## Citation
+```latex
+@misc{cryptoeprint:2020:1181,
+    author = {Siam Hussain and Baiyu Li and Farinaz Koushanfar and Rosario Cammarota},
+    title = {TinyGarble2: Smart, Efficient, and Scalable Yao’s Garble Circuit},
+    howpublished = {Cryptology ePrint Archive, Report 2020/1181},
+    year = {2020},
+    note = {\url{https://eprint.iacr.org/2020/1181}},
+}
+```
+
 ## Installation Procedure
 The installation procedure below is tested with Linux Ubuntu 18.04, on x86_64 processor, and a system with 8GB RAM. For manual installation of the framework, refer to [Manual Installation Procedure](#Manual-Installation-Procedure).
 
@@ -18,7 +29,7 @@ It also clones and makes the required libraries -
 [emp-ot](https://github.com/IntelLabs/emp-ot),
 which are adapted from the [emp-toolkit](https://github.com/emp-toolkit).
 
-- After the set up, run `./config.sh` followed by `make` if required to build TinyGarble.
+- After the set up, run `./config.sh` followed by `make` if required to build TinyGarble2.
 
 You can also run TinyGarble2 in a [docker](https://docs.docker.com/get-docker/). 
 
