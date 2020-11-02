@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
 	int cycles = 1, repeat = 1, output_mode = 0;	
 	bool report = true;
 	string in_file;
-	int bs_mal;
+	int bs_mal = INT_MAX;
 	struct rusage usage;
 	double memory_usage;
 	

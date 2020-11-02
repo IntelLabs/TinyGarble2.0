@@ -173,7 +173,7 @@ class SequentialC2PC { public:
 	}
 	
 	void function_independent() {
-
+		io->flush();
 		prg.random_bool(preprocess_value, total_PRE);
 		if(fpre->party == ALICE) {
 			fpre->abit1[0]->send(preprocess_key, total_PRE);
@@ -187,6 +187,7 @@ class SequentialC2PC { public:
 			fpre->io2[0]->flush();
 		}
 		pre_ret = 0;
+		io->flush();
 	}
 
 	void new_const_labels(){	
@@ -243,33 +244,44 @@ class SequentialC2PC { public:
 	
 	void new_input_labels(uint64_t n1, uint64_t n2, lmkvm* lmkvm_B, lmkvm* lmkvm_A, bool* input){
 		int num_inputs = n1 + n2; //local to this function
-
-		if(pre_ret > (total_PRE-n1)){
-			io->flush();
-			function_independent();
-			io->flush();
-		}
 		
-		if(party == ALICE)
-			prg.random_block(lmkvm_B->labels, n1);		
-		memcpy(lmkvm_B->mac, preprocess_mac + pre_ret, n1*sizeof(block));
-		memcpy(lmkvm_B->key, preprocess_key + pre_ret, n1*sizeof(block));
-		memcpy(lmkvm_B->value, preprocess_value + pre_ret, n1*sizeof(bool));		
-		pre_ret+= n1;
+		if(party == ALICE){
+			prg.random_block(lmkvm_B->labels, n1);
+			prg.random_block(lmkvm_A->labels, n2);
+		}	
 
-		if(pre_ret > (total_PRE-n2)){
-			io->flush();
-			function_independent();
-			io->flush();
+		uint64_t num_steps, step, last_step;
+
+		num_steps = n1/total_PRE;
+		step = min(n1, (uint64_t)total_PRE);
+		last_step = n1%total_PRE;
+		for(uint64_t i = 0; i < num_steps; ++i){
+			function_independent();		
+			memcpy(lmkvm_B->mac + i*step, preprocess_mac + pre_ret, step*sizeof(block));
+			memcpy(lmkvm_B->key + i*step, preprocess_key + pre_ret, step*sizeof(block));
+			memcpy(lmkvm_B->value + i*step, preprocess_value + pre_ret, step*sizeof(bool));	
 		}
+		function_independent();		
+		memcpy(lmkvm_B->mac + num_steps*step, preprocess_mac + pre_ret, last_step*sizeof(block));
+		memcpy(lmkvm_B->key + num_steps*step, preprocess_key + pre_ret, last_step*sizeof(block));
+		memcpy(lmkvm_B->value + num_steps*step, preprocess_value + pre_ret, last_step*sizeof(bool));
+		pre_ret+= last_step;
 
-		if(party == ALICE)
-			prg.random_block(lmkvm_A->labels, n2);		
-		memcpy(lmkvm_A->mac, preprocess_mac + pre_ret, n2*sizeof(block));
-		memcpy(lmkvm_A->key, preprocess_key + pre_ret, n2*sizeof(block));
-		memcpy(lmkvm_A->value, preprocess_value + pre_ret, n2*sizeof(bool));		
-		pre_ret+= n2;
-		
+		num_steps = n2/total_PRE;
+		step = min(n2, (uint64_t)total_PRE);
+		last_step = n2%total_PRE;
+		for(uint64_t i = 0; i < num_steps; ++i){
+			function_independent();		
+			memcpy(lmkvm_A->mac + i*step, preprocess_mac + pre_ret, step*sizeof(block));
+			memcpy(lmkvm_A->key + i*step, preprocess_key + pre_ret, step*sizeof(block));
+			memcpy(lmkvm_A->value + i*step, preprocess_value + pre_ret, step*sizeof(bool));	
+		}
+		function_independent();		
+		memcpy(lmkvm_A->mac + num_steps*step, preprocess_mac + pre_ret, last_step*sizeof(block));
+		memcpy(lmkvm_A->key + num_steps*step, preprocess_key + pre_ret, last_step*sizeof(block));
+		memcpy(lmkvm_A->value + num_steps*step, preprocess_value + pre_ret, last_step*sizeof(bool));
+		pre_ret+= last_step;		
+
 		bool * mask_B = new bool[n1];
 		bool * mask_A = new bool[n2];	
 		memset(mask_B, false, n1);
@@ -502,22 +514,16 @@ class SequentialC2PC { public:
 		ANDS_key = fpre->KEY + ANDS_ret;
 		ANDS_value = fpre->r + ANDS_ret;
 		ANDS_ret += 3*num_ands;
-
-		ands = 0;
-		if(pre_ret > (total_PRE-num_ands)){
-			io->flush();
-			function_independent();
-			io->flush();
-		}
+		
 		for(int i = 0; i < cf->num_gate; ++i) {
 			if (cf->gates[4*i+3] == AND_GATE) {
-				key[cf->gates[4*i+2]] = preprocess_key[pre_ret + ands];
-				mac[cf->gates[4*i+2]] = preprocess_mac[pre_ret + ands];
-				value[cf->gates[4*i+2]] = preprocess_value[pre_ret + ands];	
-				ands++;				
+				if (pre_ret == total_PRE) function_independent();
+				key[cf->gates[4*i+2]] = preprocess_key[pre_ret];
+				mac[cf->gates[4*i+2]] = preprocess_mac[pre_ret];
+				value[cf->gates[4*i+2]] = preprocess_value[pre_ret];	
+				pre_ret++;				
 			}
 		}
-		pre_ret += num_ands;
 		
 		/*TinyGarble >>>*/
 		for(int i = 0; i < cf->num_gate; ++i) {

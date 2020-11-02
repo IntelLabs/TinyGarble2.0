@@ -24,62 +24,62 @@ if [ $1 ] && [ $1 = "--pi" ]; then
 else
 	empfile=comp_nbit_ncc_syn.emp.bin
 	ref=3
-	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 8 -r 3 -i 12AB67 $1 $2 --oo &)>/dev/null 
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 8 -r 3 -i D1AB59 $1 $2 --oo) 
+	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 8 -r 3 -i 12AB67 "$@" --oo &)>/dev/null 
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 8 -r 3 -i D1AB59 "$@" --oo) 
 	result
 
 	empfile=full_adder.emp.bin
 	ref=166B
-	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B "$@" --oo)
 	result
 
 	empfile=half_adder.emp.bin
 	ref=1
-	(${loc}/TinyGarble -n $emploc/$empfile -i 1 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -i 0 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -i 1 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -i 0 "$@" --oo)
 	result
 
 	empfile=logics_asym_1.emp.bin
 	ref=36
-	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B "$@" --oo)
 	result
 
 	empfile=logics_asym_2.emp.bin
 	ref=12
-	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 0F "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 1B1B "$@" --oo)
 	result
 
 	empfile=sum_8bit_1cc_syn.emp.bin
 	ref=000000000000000053
-	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 2A $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 29 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -r 8 -i 2A "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 8 -i 29 "$@" --oo)
 	result
 
 	empfile=sum_nbit_ncc_syn.emp.bin
 	ref=00C953
-	(${loc}/TinyGarble -n $emploc/$empfile -c 8 -r 3 -i 782A $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 8 -r 3 -i 5129 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -c 8 -r 3 -i 782A "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 8 -r 3 -i 5129 "$@" --oo)
 	result
 
 	empfile=sub_nbit_ncc.emp.bin
 	ref=2C392A
-	(${loc}/TinyGarble -n $emploc/$empfile -c 8 -r 3 -i C6FA53 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 8 -r 3 -i 9AC129 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -c 8 -r 3 -i C6FA53 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 8 -r 3 -i 9AC129 "$@" --oo)
 	result
 
 	empfile=mult_8_8bit_8cc.emp.bin
 	ref=59B819B0
-	(${loc}/TinyGarble -n $emploc/$empfile -c 16 -r 2 -i 00740018 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 16 -r 2 -j 6389 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -c 16 -r 2 -i 00740018 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 16 -r 2 -j 6389 "$@" --oo)
 	result
 
 	empfile=mac_8_8bit_3cc.emp.bin
 	ref=00004
-	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 3 -r 1 -i 01FEFD $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 3 -r 1 -i FC05FA $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 3 -r 1 -i 01FEFD "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 3 -r 1 -i FC05FA "$@" --oo)
 	result
 
 	#1 -2 -3: 01FEFD
@@ -94,37 +94,37 @@ else
 
 	empfile=mac_8_8bit_3cc.emp.bin
 	ref=00033FFE80004
-	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 3 -r 3 -i FFFEFD01020301FEFD $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 3 -r 3 -i FC05FAFC05FAFC05FA $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -m 1 -c 3 -r 3 -i FFFEFD01020301FEFD "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -m 1 -c 3 -r 3 -i FC05FAFC05FAFC05FA "$@" --oo)
 	result
 
 	empfile=aes_1cc_syn.emp.bin
 	ref=A969ED5A75CB77B05EE30EA8205C12A4A969ED5A75CB77B05EE30EA8205C12A4
-	(${loc}/TinyGarble -n $emploc/$empfile -r 2 -i DCE4AD18D0F3C95EDCE41AC499CB0700DCE4AD18D0F3C95EDCE41AC499CB0700 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 2 -i 724012DAF940F730C8D38BCF22932E04724012DAF940F730C8D38BCF22932E04 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -r 2 -i DCE4AD18D0F3C95EDCE41AC499CB0700DCE4AD18D0F3C95EDCE41AC499CB0700 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -r 2 -i 724012DAF940F730C8D38BCF22932E04724012DAF940F730C8D38BCF22932E04 "$@" --oo)
 	result
 
 	empfile=aes_11cc_syn.emp.bin
 	ref=A969ED5A75CB77B05EE30EA8205C12A4A969ED5A75CB77B05EE30EA8205C12A4
-	(${loc}/TinyGarble -n $emploc/$empfile -c 11 -r 2 -m 1 -j DCE4AD18D0F3C95EDCE41AC499CB0700DCE4AD18D0F3C95EDCE41AC499CB0700 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 11 -r 2 -m 1 -j 724012DAF940F730C8D38BCF22932E04724012DAF940F730C8D38BCF22932E04 $1 $2 --oo)
+	(${loc}/TinyGarble -n $emploc/$empfile -c 11 -r 2 -m 1 -j DCE4AD18D0F3C95EDCE41AC499CB0700DCE4AD18D0F3C95EDCE41AC499CB0700 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -k 2 -n $emploc/$empfile -c 11 -r 2 -m 1 -j 724012DAF940F730C8D38BCF22932E04724012DAF940F730C8D38BCF22932E04 "$@" --oo)
 	result
 
 	empfile=consecutive
 	ref=12C4600
-	(${loc}/TinyGarble -f ${loc}/consec_test_a.txt $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -f ${loc}/consec_test_b.txt -k 2 $1 $2 --oo)
+	(${loc}/TinyGarble -f ${loc}/consec_test_a.txt "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -f ${loc}/consec_test_b.txt -k 2 "$@" --oo)
 	result
 
 	empfile=mxm_relu_mp
 	ref=000C
-	(${loc}/TinyGarble -f ${loc}/mxm_relu_mp_a.txt $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -f ${loc}/mxm_relu_mp_b.txt -k 2 $1 $2 --oo)
+	(${loc}/TinyGarble -f ${loc}/mxm_relu_mp_a.txt "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -f ${loc}/mxm_relu_mp_b.txt -k 2 "$@" --oo)
 	result
 
 	empfile=aes_ht
 	ref=2E2B34CA59FA4C883B2C8AEFD44BE966A969ED5A75CB77B05EE30EA8205C12A4
-	(${loc}/TinyGarble -f ${loc}/aes_ht_a.txt -r 2 $1 $2 --oo &)>/dev/null
-	output=$(${loc}/TinyGarble -f ${loc}/aes_ht_b.txt -r 2 -k 2 $1 $2 --oo)
+	(${loc}/TinyGarble -f ${loc}/aes_ht_a.txt -r 2 "$@" --oo &)>/dev/null
+	output=$(${loc}/TinyGarble -f ${loc}/aes_ht_b.txt -r 2 -k 2 "$@" --oo)
 	result
 fi

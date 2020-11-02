@@ -39,6 +39,7 @@ int main(int argc, char** argv) {
 	string input_hex_str, init_hex_str, output_hex_str;
 	int cycles, repeat, output_mode;
 	string in_file, in_file_A, in_file_B;
+	int bs_mal = INT_MAX;
 	double memory_usage, MEMORY_USAGE;
 	double transferred_data, TRANSFERRED_DATA;
 	string bench_file, eval_file;	
@@ -54,6 +55,8 @@ int main(int argc, char** argv) {
 	("init,j", po::value<string>(&init_hex_str)->default_value("0"),"hexadecimal init (little endian).") //
 	("repeat,r", po::value<int>(&repeat)->default_value(1),"number of times to repeat the run") //
 	("file,f", po::value<string>(&bench_file)->default_value(string(BIN_PATH) + "benchmarks.txt"),"netlist, cycles, output_mode read from this file") //
+	("batch_size,b", po::value<int>(&bs_mal)->default_value(INT_MAX),"pre-processing bacth size for malicious setting\n\
+	default:choose adaptively\nused for setting maximum available memory")  //
 	("num_eval,t", po::value<int>(&num_eval)->default_value(10),"number of times to average evaluation") //
 	("sh", "semi-honest security model"); 
 	
@@ -126,7 +129,8 @@ int main(int argc, char** argv) {
 		
 		cmd = string(BIN_PATH) + "TinyGarble --oo" \
 				+ " -p " + to_string(port) \
-				+ " -s " + server_ip;	
+				+ " -s " + server_ip \
+				+ " -b " + to_string(bs_mal);	
 		
 		if(mode == "S"){
 			fin >> netlist_address >> cycles >> output_mode >> benchmark >> bit_width;		

@@ -33,7 +33,7 @@ string sequential_execution(int party, NetIO* io, string netlist_address, string
 	int NUM_ANDS = num_ands*cyc_rep;
 	
 	int total_ANDS = min(NUM_ANDS, max({BS_MAL_MIN, bs_mal, num_ands}, comp));
-	int total_PRE = min(NUM_INPUTS + NUM_ANDS, max({bs_mal, cf.n1*cyc_rep, cf.n2*cyc_rep, num_ands}, comp));
+	int total_PRE = min(NUM_INPUTS + NUM_ANDS, bs_mal);
 	
 	if (report) cout << total_ANDS << " " << total_PRE << endl;	
 	
@@ -130,7 +130,7 @@ string sequential_execution(int party, NetIO* io, string in_file, int repeat_0 =
 	}	
 	
 	int total_ANDS = min(NUM_ANDS, max({BS_MAL_MIN, bs_mal, max_num_ands}, comp));
-	int total_PRE = min(NUM_INPUTS + NUM_ANDS, max({bs_mal, max_num_inputs, max_num_ands}, comp));
+	int total_PRE = min(NUM_INPUTS + NUM_ANDS, bs_mal);
 
 	if (report) cout << "total_PRE = " << total_PRE << " total_ANDS= " << total_ANDS << endl;
 	
