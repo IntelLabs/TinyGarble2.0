@@ -8,15 +8,7 @@
 using namespace std;
 namespace po = boost::program_options;
 
-#define SEC_SH 0
-
-void millionaire(NetIO* io, int party){	
-#if SEC_SH
-	TinyGarblePI_SH* TGPI = new TinyGarblePI_SH(io, party);
-#else
-	TinyGarblePI* TGPI = new TinyGarblePI(io, party);
-#endif
-	io->flush();
+void millionaire(auto TGPI){	
 
 	uint64_t bit_width = 64;
     int64_t a = 0, b = 0;
@@ -44,7 +36,7 @@ void millionaire(NetIO* io, int party){
     int64_t res = TGPI->reveal(res_x, 1, false);
 
 #if !SEC_SH
-    if (party == BOB) //authenticated garbling allows only evaluator to compute the result
+    if (TGPI->party == BOB) //authenticated garbling allows only evaluator to compute the result
 #endif
         if (res == 1) cout << "BOB is richer" << endl;
         else cout << "ALICE is richer" << endl;
@@ -60,14 +52,14 @@ int main(int argc, char** argv) {
 	int party = 1, port = 1234;
 	string netlist_address;
 	string server_ip;
-	int program;
 	
 	po::options_description desc{"Yao's Millionair's Problem \nAllowed options"};
 	desc.add_options()  //
 	("help,h", "produce help message")  //
 	("party,k", po::value<int>(&party)->default_value(1), "party id: 1 for garbler, 2 for evaluator")  //
 	("port,p", po::value<int>(&port)->default_value(1234), "socket port")  //
-	("server_ip,s", po::value<string>(&server_ip)->default_value("127.0.0.1"), "server's IP.");
+	("server_ip,s", po::value<string>(&server_ip)->default_value("127.0.0.1"), "server's IP.")
+	("sh", "semi-honest setting (default is malicious)");
 	
 	po::variables_map vm;
 	try {
@@ -86,8 +78,22 @@ int main(int argc, char** argv) {
 		
 	NetIO* io = new NetIO(party==ALICE ? nullptr:server_ip.c_str(), port, true);
 	io->set_nodelay();
-
-    millionaire(io, party);
+	
+	TinyGarblePI_SH* TGPI_SH;
+	TinyGarblePI* TGPI; 
+	
+	if (vm.count("sh")){
+		cout << "testing program interface in semi-honest setting" << endl;
+		TGPI_SH = new TinyGarblePI_SH(io, party);
+		io->flush();
+		millionaire(TGPI_SH);		
+	}
+	else {
+		cout << "Millionair's Problem in malicious setting" << endl;
+		TGPI = new TinyGarblePI(io, party, 192, 64);
+		io->flush();
+		millionaire(TGPI);
+	}
 	
 	delete io;
 	

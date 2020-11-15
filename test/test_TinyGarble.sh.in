@@ -20,7 +20,7 @@ if [ ! -f "$emploc/comp_nbit_ncc_syn.emp.bin" ]; then
 fi
 
 if [ $1 ] && [ $1 = "--pi" ]; then
-	${loc}/TinyGarblePI $2 < test/rand.txt > /dev/null & ${loc}/TinyGarblePI $2 -k 2 < test/rand.txt
+	${loc}/TinyGarblePI "$@" < test/rand.txt > /dev/null & ${loc}/TinyGarblePI "$@" -k 2 < test/rand.txt
 else
 	empfile=comp_nbit_ncc_syn.emp.bin
 	ref=3
