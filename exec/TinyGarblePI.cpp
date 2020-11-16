@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 	string netlist_address;
 	string server_ip;
 	int program;
+	int bs_mal = 100000;
 	
 	Timer T;
 	memMeter M;
@@ -26,6 +27,8 @@ int main(int argc, char** argv) {
 	("party,k", po::value<int>(&party)->default_value(1), "party id: 1 for garbler, 2 for evaluator")  //
 	("port,p", po::value<int>(&port)->default_value(1234), "socket port")  //
 	("server_ip,s", po::value<string>(&server_ip)->default_value("127.0.0.1"), "server's IP.")  //
+	("batch_size,b", po::value<int>(&bs_mal)->default_value(100000),"pre-processing bacth size for malicious setting\n\
+	default:choose adaptively\nused for setting maximum available memory") //
 	("sh", "semi-honest setting (default is malicious)") ;
 	
 	po::variables_map vm;
@@ -58,8 +61,8 @@ int main(int argc, char** argv) {
 		unit_test(TGPI_SH);		
 	}
 	else {
-		cout << "testing program interface in malicious setting" << endl;
-		TGPI = new TinyGarblePI(io, party, 100000, 100000);
+		cout << "testing program interface in malicious setting with batch size " << bs_mal << endl;
+		TGPI = new TinyGarblePI(io, party, bs_mal, bs_mal);
 		io->flush();
 		unit_test(TGPI);
 	}

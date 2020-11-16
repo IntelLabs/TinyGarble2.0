@@ -21,12 +21,15 @@ void mat_mult(uint64_t i, uint64_t j, uint64_t k, auto &A, auto &B, auto &C, int
 	}
 }
 
-uint64_t test_index = 0;
+uint64_t test_index = 0, test_passed = 0;
 void verify_n_report(string test, auto res, auto ref){
     cout << "[<#>] test " << test_index++ << ": " << test;
-    if (res == ref) cout << ": success!";
+    if (res == ref){
+		test_passed++;
+		cout << ": success!";
+	}
     else cout << ": fail! excpected: " << ref << " computed: " << res;
-    cout  << endl;
+	cout << "(" << test_passed << "/" << test_index << ")" << endl;
 }
 
 #endif //EXEC_COMMON_H

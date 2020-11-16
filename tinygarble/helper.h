@@ -33,26 +33,22 @@ std::ostream& operator<< (std::ostream &os, const vector<T> &v){
 	return os;
 }
 
-void input_vector(auto& A, uint64_t len0) {
-	A = make_vector<int64_t>(len0);	
+void input_vector(auto& A, uint64_t len0) {	
 	for(uint64_t i0 = 0; i0 < len0; i0++)
 		std::cin >> A[i0];				
 }
 void input_vector(auto& A, uint64_t len0, uint64_t len1) {
-	A = make_vector<int64_t>(len0, len1);
 	for(uint64_t i0 = 0; i0 < len0; i0++)
 		for(uint64_t i1 = 0; i1 < len1; i1++)
 			std::cin >> A[i0][i1];
 }
 void input_vector(auto& A, uint64_t len0, uint64_t len1, uint64_t len2) {
-	A = make_vector<int64_t>(len0, len1, len2);
 	for(uint64_t i0 = 0; i0 < len0; i0++)
 		for(uint64_t i1 = 0; i1 < len1; i1++)
 			for (uint64_t i2 = 0; i2 < len2; i2++)
 				std::cin >> A[i0][i1][i2];
 }		
 void input_vector(auto& A, uint64_t len0, uint64_t len1, uint64_t len2, uint64_t len3){
-	A = make_vector<int64_t>(len0, len1, len2, len3);
 	for(uint64_t i0 = 0; i0 < len0; i0++)
 		for(uint64_t i1 = 0; i1 < len1; i1++)
 			for (uint64_t i2 = 0; i2 < len2; i2++)
