@@ -24,5 +24,5 @@ if [ "$EUID" -eq 0 ]
   then 
     make #having the user as root ususally implies we're inside a docker, which sometimes have issues with "-j"
   else
-    make -j
+    make
 fi
