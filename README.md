@@ -1,4 +1,5 @@
 # TinyGarble 2.0
+<!-- reviewed 4/3/23 -->
 
 ### Smart, efficient and scalable Yao's Garbled Circuit (GC)
 TinyGarble2 is a C++ framework for privacy-preserving computation through the Yao’s Garbled Circuit (GC) protocol in both the honest-but-curious and the malicious security models. 
