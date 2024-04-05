@@ -4,7 +4,7 @@ cd ..
 mkdir -p include
 
 echo "---------- installing dependencies ----------"
-if [ "$EUID" -eq 0 ]
+if [[ "$EUID" -eq 0 ||  "$(uname)" == "Darwin" ] 
   then 
     ./TinyGarble2.0/install_scripts/install_dependencies.sh
   else
